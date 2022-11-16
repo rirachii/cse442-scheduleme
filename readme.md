@@ -1,8 +1,9 @@
 # Schedule Me Web App
 
 ## Running app
-1. Download docker: https://docs.docker.com/get-docker/
-2. 
+1. Download Node LTS 
+2. Download docker: https://docs.docker.com/get-docker/
+3. 
 
 ### `docker-compose up --build`
 Source:
