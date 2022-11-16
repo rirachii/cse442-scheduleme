@@ -1,0 +1,47 @@
+# Version of Docker-compose
+version: '3.8'
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      - PORT=5000
+      - MONGO_INITDB_ROOT_USERNAME=mern
+      - MONGO_INITDB_ROOT_PASSWORD=merndocker
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mern
+      - MONGO_INITDB_ROOT_PASSWORD=merndocker
+    volumes:
+      # <nameOfVolume>:<directorInDocker>
+      - mongoDB:/data/db
+  react:
+    build:
+      context: ./client
+      dockerfile: react.dockerfile
+    image: myapp-client
+    container_name: myapp-react-client
+    command: npm run start
+    volumes:
+        # Bind-mounts configuration
+      - ./client:/client
+        # Ignoring any changes made in "node_modules" folder
+      - /client/node_modules
+    ports:
+        # External port:Internal port
+        - 3000:3000
+    depends_on:
+        # Starts up the node service before starting up the react service
+      - node
+    environment:
+      # Enabling hot reload
+      - CHOKIDAR_USEPOLLING=true
+volumes:
+  # Making the volume accessible by other containers
+  mongoDB:
